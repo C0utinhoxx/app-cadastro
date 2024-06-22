@@ -1,16 +1,37 @@
 <?php
-if(isset($_POST['submit']))
+if(!empty($_GET['idproduto']))
+{
+    // print_r('Nome do produto: ' . $_POST['nome']);
+    // print_r('<br>');
+    // print_r('Preço do produto: ' . $_POST['preco']);
+    // print_r('<br>');
+    // print_r('Descrição do produto: ' . $_POST['descricao']);
 
-// include_once('conect.php');
- include_once('conect.php');
+    include_once('conect.php');
 
-        $nome = $_POST['nome'];
-        $preco = $_POST['preco'];
-        $descricao = $_POST['descricao'];
-        $result = mysqli_query($conn,"SELECT * FROM produto(nome,preco,descricao) 
-        VALUES ('$nome','$preco','$descricao')");
+    $id = $_GET['idproduto'];
 
-        header('Location: cadastro.php');
+    $sqlSelect = "SELECT * FROM produtos WHERE idproduto=$idproduto";
+
+    $result = $conn->query($sqlSelect);
+
+     if($result->num_rows > 0)
+     {
+        while($user_data = mysqli_fetch_assoc($result))
+        { 
+        $nome = $user_data['nome'];
+        $preco = $user_data['preco'];
+        $descricao = $user_data['descricao'];
+        }
+        print_r($nome);
+    }
+    //  else
+    //  { 
+    //     header('Location: listagem.phh')
+    // }
+
+    }
+    // $result = mysqli_query ($conn, "INSERT INTO produtos(nome,preco,descricao) VALUES ('$nome','$preco','$descricao')");    
 
 ?>
 <!DOCTYPE html>
@@ -19,7 +40,7 @@ if(isset($_POST['submit']))
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
+    <title>edição</title>
     <style>
         body{
             font-family: Arial, Helvetica, sans-serif;
@@ -79,7 +100,7 @@ if(isset($_POST['submit']))
             outline: none;
             font-size: 15px;
         }
-        #submit{
+        #upDate{
             background-color: dodgerblue;
             width: 100%;
             border: none;
@@ -89,33 +110,35 @@ if(isset($_POST['submit']))
             cursor: pointer;
             border-radius: 10px;
         }
-        #submit:hover{
+        #upDate:hover{
             background-color: rgb(0, 128, 255);
         }
     </style>
 </head>
 <body>
+        <a href="listagem.php">Voltar</a>
     <div class="box">
             <fieldset>
-                <legend><b>Cadastro do produto</b></legend>
+                <legend><b>Altere seu produto</b></legend>
                 <form action="cadastro.php" method="POST">
                 <br>
                 <div class="inputBox">
-                    <input type="text" name="nome" id="nome" class="inputUser" required>
+                    <input type="text" name="nome" idproduto="nome" class="inputUser" value=<?php echo $nome;?> required>
                     <label for="nome" class="labelInput">Nome do produto</label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="number" name="preco" id="preco" class="inputUser" required>
+                    <input type="number" name="preco" idproduto="preco" class="inputUser" value=<?php echo $preco;?> required>
                     <label for="preco" class="labelInput">Preço do produto </label>
                 </div>
                 <br><br>
                 <div class="inputBox">
-                    <input type="text" name="descricao" id="descricao" class="inputUser" required>
+                    <input type="text" name="descricao" idproduto="descricao" class="inputUser" value=<?php echo $descricao;?> required>
                     <label for="descricao" class="labelInput">Descrição do produto</label>
                 </div>
                 <br><br>
-                <input type="submit" name="submit" id="submit">
+                <input type="hidden" name="idproduto" value="<?php echo $idproduto?>">
+                <input type="submit" name="update" $idproduto="update">
             </fieldset>
         </form>
     </div>
